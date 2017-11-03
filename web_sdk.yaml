@@ -12,6 +12,7 @@ info:
   termsOfService: 'https://www.kongapay.com/terms/'
   x-logo:
     url: 'https://www.kongapay.com/img/logo@2x.png'
+    backgroundColor: '#FFFFFF'
   description: |
     # Introduction
     The KongaPay Web Plugin is designed for use on the web.
