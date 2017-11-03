@@ -8,8 +8,8 @@ info:
     email: support@kongapay.com
   license:
     name: Kongapay
-    url: 'https://www.kongapay.com/license/'
-  termsOfService: 'https://www.kongapay.com/terms/'
+    url: 'https://www.kongapay.com/'
+  termsOfService: 'https://www.kongapay.com/'
   x-logo:
     url: 'https://www.kongapay.com/img/logo@2x.png'
     backgroundColor: '#FFFFFF'
