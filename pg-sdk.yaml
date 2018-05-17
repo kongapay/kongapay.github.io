@@ -34,14 +34,12 @@ info:
     # Note
     Test and Live environment is based on the key supplied. Key with *test_* signifies test environment and *live_* signifies live environment
 
-    <!-- Kongapay-Inject: <security-definitions> -->
-
-    *Sample Header*
+    Sample Header
     ```
-    {
-      "Api-Key": "<your public key>",
-      "Source": "web_sdk"
-    }
+      {
+        "Api-Key": "<your public key>",
+        "Source": "web_sdk"
+      }
     ```
 
     # Implementation
@@ -55,21 +53,20 @@ info:
     2. Create Javascript Object
     Javascript object is to built for the transaction.
     ```
-            new KongaPay({
-                    id: "<button_container_id>", //optional
-                    buttonSize: 160,
-                    mKey: "<your public API key>",
-                    merchantName: "<Business Name>",
-                    description: "<More detail about the transaction (meta-data).>",
-                    callBack: "<Your call back url>",
-                    amount: "<Amount>",
-                    transactionReference: "<payment reference>",  //unique on every instance
-                    hash: "<hash_hmac('SHA512', {amount} '#'{transactionReference}'#'{merchant_id}, {api_key})>", //optional
-                    escrow: 1,
-                    qrCode: 1
-                });
+      new KongaPay({
+          id: "<button_container_id>", //optional
+          buttonSize: 160,
+          mKey: "<your public API key>",
+          merchantName: "<Business Name>",
+          description: "<More detail about the transaction (meta-data).>",
+          callBack: "<Your call back url>",
+          amount: "<Amount>",
+          transactionReference: "<payment reference>",  //unique on every instance
+          hash: "<hash_hmac('SHA512', {amount} '#'{transactionReference}'#'{merchant_id}, {api_key})>", //optional
+          escrow: 1,
+          qrCode: 1
+      });
     ```
-
 host: api.kongapay.com
 basePath: /
 schemes:
@@ -91,38 +88,8 @@ securityDefinitions:
     in: header
 security:
   - ApiKey: []
-responses:
-  AccessForbidden:
-    description: 'Access forbidden, invalid API-KEY was used'
-    schema:
-      $ref: '#/definitions/Error'
-  NotFound:
-    description: Resource was not found
-    schema:
-      $ref: '#/definitions/Error'
-  Conflict:
-    description: Conflict
-    schema:
-      $ref: '#/definitions/Error'
-  InvalidDataError:
-    description: Invalid data was sent
-    schema:
-      $ref: '#/definitions/InvalidError'
-parameters:
-  resourceId:
-    name: id
-    in: path
-    description: The resource identifier string
-    type: string
-    required: true
-  hash:
-    name: hash
-    in: path
-    description: The token identifier string
-    type: string
-    required: true
-paths:
 
+paths:
   /web_sdk:
     post:
       tags:
@@ -249,38 +216,168 @@ paths:
               merchant_refernce:
                 type: string
 
-definitions:
-  ApiKey:
-    type: object
-    description: API secret Key.
-    properties:
-      id:
-        readOnly: true
-      description:
-        description: API key description
-        type: string
-      datetimeFormat:
-        description: Date time format
-        type: string
-        default: iso8601
-        enum:
-          - mysql
-          - iso8601
-  InvalidError:
-    allOf:
-      - $ref: '#/definitions/Error'
-      - type: object
-        properties:
-          details:
-            type: array
-            items:
-              type: string
-  Error:
-    type: object
-    properties:
-      status:
-        type: integer
-        minimum: 100
-        maximum: 600
-      error:
-        type: string
+  /android_sdk:
+    post:
+      tags:
+        - Android SDK
+      summary: KPG Android SDK Documentation
+      description: 'Hello World'
+      produces:
+        - application/json
+
+  /ios_sdk:
+    post:
+      tags:
+        - iOS SDK
+      summary: KPG iOS SDK Documentation
+      description: 'Hello World'
+      produces:
+        - application/json
+
+  /requery:
+    get:
+      tags:
+        - Transaction Requery
+      summary: KPG Transaction Requery Documentation
+      description: 'Once a transaction is completed, merchants can confirm the status of a transaction by calling'
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Configuration options for KPG web SDK
+          required: true
+          schema:
+            type: object
+            properties:
+              amount:
+                type: integer
+                description: Indicates the amount the customer inputed
+              originalAmount:
+                type: integer
+                description: Indicates the amount before the user made a new transaction
+              identifier:
+                type: string
+                description: A 'receipt' id appended to the transaction
+              createdAt:
+                type: string
+                description: The date, and time the transaction was carried out
+              merchantReference:
+                type: string
+                description: The reference generated for the merchant. Used for identification of the merchant. Not to be confused with
+                             merchantId which is a numeric value
+              customerId:
+                type: string
+                description: The id entered by the user
+              desc:
+                type: string
+                description: The description given by the user
+              status:
+                type: string
+                description: The status of the transaction
+              successful:
+                type: boolean
+                description: Returns true to indicate that payment was a success
+      responses:
+        '200':
+          description: Payment Successful
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+                enum:
+                  - 200
+                description: test
+              message:
+                type: string
+                enum:
+                  - Payment Successful
+              status:
+                type: string
+                enum:
+                  - success
+              merchant_refernce:
+                type: string
+        '100':
+          description: Missing Parameters
+        '101':
+          description: Server side errors
+
+  /refund:
+    post:
+      tags:
+        - Refund Endpoint
+      summary: Refund Endpoint Documentation for KPG
+      description: 'Hello World'
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Configuration options for KPG web SDK
+          required: true
+          schema:
+            type: object
+            properties:
+              amount:
+                type: integer
+                description: Indicates the amount the customer inputed
+              reference:
+                type: integer
+                description: Unique ID passed to KPG SDK on initialization for the transaction
+      responses:
+        '200':
+          description: Transaction is successful.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - success
+        '100':
+          description: Transaction is successful.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - failed
+
+  /bulk_payout:
+    post:
+      tags:
+        - Bulk Payout Endpoint
+      summary: Bulk Payout Endpoint Documentation for KPG
+      description: 'Hello World'
+      produces:
+        - application/json
+
+  /get_banks:
+    post:
+      tags:
+        - Get Banks Endpoint
+      summary: Get Banks Endpoint Documentation for KPG
+      description: 'Hello World'
+      produces:
+        - application/json
+
+  /name_enquiry:
+    post:
+      tags:
+        - Name Enquiry Endpoint
+      summary: Name Enquiry Endpoint Documentation for KPG
+      description: 'Hello World'
+      produces:
+        - application/json
+
+  /get_wallets:
+    post:
+      tags:
+        - Get Wallet Endpoint
+      summary: Get Wallet Endpoint Documentation for KPG
+      description: 'Hello World'
+      produces:
+        - application/json
