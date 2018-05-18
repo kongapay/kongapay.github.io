@@ -34,45 +34,12 @@ info:
     # Note
     Test and Live environment is based on the key supplied. Key with *test_* signifies test environment and *live_* signifies live environment
 
-    Sample Header
-    ```
-      {
-        "Api-Key": "<your public key>",
-        "Source": "web_sdk"
-      }
-    ```
-
-    # Implementation
-    1. Add Javascript Link to the page
-    On the page where the Merchant wants to receive payment the link to the Javascript file is to be added on the page.
-    It is preferable to have it close to the javascript object.
-    ```
-     https://www.kongapay.com/plugins/web-plugin/js/v2/kongapay.min.js
-    ```
-
-    2. Create Javascript Object
-    Javascript object is to built for the transaction.
-    ```
-      new KongaPay({
-          id: "<button_container_id>", //optional
-          buttonSize: 160,
-          mKey: "<your public API key>",
-          merchantName: "<Business Name>",
-          description: "<More detail about the transaction (meta-data).>",
-          callBack: "<Your call back url>",
-          amount: "<Amount>",
-          transactionReference: "<payment reference>",  //unique on every instance
-          hash: "<hash_hmac('SHA512', {amount} '#'{transactionReference}'#'{merchant_id}, {api_key})>", //optional
-          escrow: 1,
-          qrCode: 1
-      });
-    ```
-host: api.kongapay.com
+host: kongapay.com
 basePath: /
 schemes:
   - https
 x-servers:
-  - url: //api.kongapay.com/
+  - url: //kongapay.com/
     description: Live Server
 produces:
   - application/json
@@ -90,14 +57,14 @@ security:
   - ApiKey: []
 
 paths:
-  /web_sdk:
+  /paymentgateway:
     post:
       tags:
         - Web SDK
-      summary: KPG WEB SDK Documentation
-      description: 'Hello World'
+      summary: WEB SDK Documentation
+      description: 'Initiate payment by making a redirect POST request'
       produces:
-        - application/json
+        - application/x-www-form-urlencoded
       parameters:
         - in: body
           name: body
@@ -108,47 +75,45 @@ paths:
             properties:
               amount:
                 type: integer
-                description: Transaction Amount always in kobo
+                description: Transaction Amount in kobo
               desc:
                 type: string
-                description: Reason for the payment
+                description: short description
               hash:
                 type: string
-                description: This is an encrypted value, this value is generated using the amount from the merchant and public key supplied by KPG. format sha512(amount|public_key|reference)
+                description: generated like so - sha512(amount|public_key|reference)
               email:
                 type: string
                 format: email
-                description: Email in which receipt for transaction would be sent
+                description: customer email
               merchantId:
                 type: string
-                description: This is a unique id provided by KPG
+                description: This is will be provided by KongaPay on registration
               merchant_reference:
                 type: string
-                description: Transaction reference, this has to be unique for every transaction to be initiated by KPG SDK else it would fail
+                description: Transaction reference, must be unique for every transaction request
               callback:
                 type: string
-                description: This should contain the url to redirect to or inline function to execute when returning a response, the callback response data contains the transaction status and merchantRef
+                description: a url to redirect customer after processing payment
               metadata:
                 type: object
                 description: This should contain an array of object about a transaction. check working example below to see format
               enableFrame:
                 type: boolean
-                description: This option is used by KPG SDK to load a frame or not
-              selectedChannelIdentifier:
-                type: string
-                description: This the channel merchant is directed to on KPG
+                description: setting to true will load the SDK in an iframe. false by default
+                default: false
               phone:
                 type: string
-                description: Customers Phone Number
+                description: Customer's Phone Number
               firstname:
                 type: string
-                description: Customers First Name
+                description: Customer's First Name
               lastname:
                 type: string
-                description: Customers Last Name
+                description: Customer's Last Name
               customerId:
                 type: string
-                description: customer Id. This could be email as well. This is needed to save and retrieve saved customer cards
+                description: customer's email/phone/ID. Used to save customer's payment details where permitted
             required:
               - amount
               - description
@@ -237,7 +202,7 @@ paths:
   /requery:
     get:
       tags:
-        - Transaction Requery
+        - Requery
       summary: KPG Transaction Requery Documentation
       description: 'Once a transaction is completed, merchants can confirm the status of a transaction by calling'
       produces:
@@ -307,7 +272,7 @@ paths:
   /refund:
     post:
       tags:
-        - Refund Endpoint
+        - Refund
       summary: Refund Endpoint Documentation for KPG
       description: 'Hello World'
       produces:
@@ -345,39 +310,3 @@ paths:
                 type: string
                 enum:
                   - failed
-
-  /bulk_payout:
-    post:
-      tags:
-        - Bulk Payout Endpoint
-      summary: Bulk Payout Endpoint Documentation for KPG
-      description: 'Hello World'
-      produces:
-        - application/json
-
-  /get_banks:
-    post:
-      tags:
-        - Get Banks Endpoint
-      summary: Get Banks Endpoint Documentation for KPG
-      description: 'Hello World'
-      produces:
-        - application/json
-
-  /name_enquiry:
-    post:
-      tags:
-        - Name Enquiry Endpoint
-      summary: Name Enquiry Endpoint Documentation for KPG
-      description: 'Hello World'
-      produces:
-        - application/json
-
-  /get_wallets:
-    post:
-      tags:
-        - Get Wallet Endpoint
-      summary: Get Wallet Endpoint Documentation for KPG
-      description: 'Hello World'
-      produces:
-        - application/json

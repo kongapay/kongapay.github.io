@@ -52,23 +52,6 @@ info:
      https://www.kongapay.com/plugins/web-plugin/js/v2/kongapay.min.js
     ```
 
-    2. Create Javascript Object
-    Javascript object is to built for the transaction.
-    ```
-            new KongaPay({
-                    id: "<button_container_id>", //optional
-                    buttonSize: 160,
-                    mKey: "<your public API key>",
-                    merchantName: "<Business Name>",
-                    description: "<More detail about the transaction (meta-data).>",
-                    callBack: "<Your call back url>",
-                    amount: "<Amount>",
-                    transactionReference: "<payment reference>",  //unique on every instance
-                    hash: "<hash_hmac('SHA512', {amount} '#'{transactionReference}'#'{merchant_id}, {api_key})>", //optional
-                    escrow: 1,
-                    qrCode: 1
-                });
-    ```
 
 host: api.kongapay.com
 basePath: /
