@@ -1,28 +1,22 @@
 swagger: '2.0'
 info:
-  version: '1.0'
-  title: Kongapay SDK
+  version: '2.0'
+  title: KongaPay Payment Gateway SDK
   contact:
-    name: Kongapay Support
+    name: KongaPay Support
     url: 'https://www.kongapay.com/'
     email: support@kongapay.com
   license:
     name: Kongapay
     url: 'https://www.kongapay.com/'
-  termsOfService: 'https://www.kongapay.com/'
+  termsOfService: 'https://www.kongapay.com/page/customerterms'
   x-logo:
     url: 'https://www.kongapay.com/img/logo@2x.png'
   description: |
     # Introduction
-    The KongaPay Web Plugin is designed for use on the web.
-    This plugin allow merchants to receive payments from a KongaPay user.
-    This plugin will be implemented using HTML and Javascript.
+    Welcome to the official documentation of KongaPay Payment Gateway SDK. The SDK allows merchants to receive payments on their Website as well as Android and IOS Apps.
 
-    # Requirement
-    Merchant must be signed up as a Merchant on KongaPay.
-    Click (https://www.kongapay.com/merchant/register) to sign up.
-    When you sign up for an account, you are given your API key (test).
-    On meeting all requirement, (live) API key will be generated for you which can be view on our portal.
+    In order to use KongaPay Payment Gateway SDK, <a href="https://www.kongapay.com/merchant/register" target="_blank">sign up as a Merchant on KongaPay</a>. After signup, a Test API Key will be generated for you. Live API Key will be generated for you on meeting all requirements.
 
     # Authentication
     You authenticate to the
@@ -57,7 +51,7 @@ security:
   - ApiKey: []
 
 paths:
-  /paymentgateway:
+  /wed_sdk:
     post:
       tags:
         - Web SDK
@@ -76,7 +70,7 @@ paths:
               amount:
                 type: integer
                 description: Transaction Amount in kobo
-              desc:
+              description:
                 type: string
                 description: short description
               hash:
@@ -97,7 +91,7 @@ paths:
                 description: a url to redirect customer after processing payment
               metadata:
                 type: object
-                description: This should contain an array of object about a transaction. check working example below to see format
+                description: This should contain an array of object about a transaction.
               enableFrame:
                 type: boolean
                 description: setting to true will load the SDK in an iframe. false by default
@@ -181,6 +175,59 @@ paths:
               merchant_refernce:
                 type: string
 
+      x-code-samples:
+        - lang: JS Implementation
+          source: |
+            <html>
+            <script src="https://kongapay-pg.kongapay.com/js/v1/production/pg.js"></script>
+            <body>
+              <button class="btn btn-success btn-space" type="button" onclick="payWithKPG()"> Pay KPG </button>
+              <script>
+                function payWithKPG() {
+                  KPG.setup({
+                    "hash": "c0d20d59c2d97f86113802cddbede266c6c4fc5ff68ce6ea6e2de1c6e7c8c61155698e47b37920ed95dc68a65f97c287992ec21573f0a7742a9d34ca8e4b6db9",
+                    "amount": 12780,
+                    "description": "long thing",
+                    "email": "test@konga.com",
+                    "merchantId": "mer_001_TESTM",
+                    "reference": "TEST1XCDF",
+                    "firstname" : "Chioma",
+                    "lastname" : "Adeleke",
+                    "phone" : "08000000000",
+                    "metadata": {
+                      "name": "address",
+                      "value": "1 Redemption Crescent, Gbagada, Lagos."
+                    },
+                    "enableFrame": true,
+                    "callback" : "returnResult",
+                    "selectedChannelIdentifier" : "chn_002_deb1t",
+                    "customerId" : "1"
+                  });
+                }
+                function returnResult(err, data){
+                  console.log(err)
+                }
+              </script>
+            </body>
+            </html>
+
+        - lang: Form Implementation
+          source: |
+            <form method="post" action="https://www.kongapay.com/paymentgateway">
+              <input type="text" value="c0d20d59c2d97f86113802cddbede266c6c4fc5ff68ce6ea6e2de1c6e7c8c61155698e47b37920ed95dc68a65f97c287992ec21573f0a7742a9d34ca8e4b6db9" name="hash"/>
+              <input type="number" value="12780" name="amount"/>
+              <input type="text" value="tesing" name="description">
+              <input type="email" value="lukmon.alebiosu@konga.com" name="email">
+              <input type="text" value="mer_001_TESTM" name="merchant_id">
+              <input type="text" value="kongapay_001" name="reference">
+              <input type="text" value="Chioma" name="firstname">
+              <input type="text" value="Adeleke" name="lastname">
+              <input type="text" value="08000000000" name="phone">
+              <input type="text" value="https://kongapay.com" name="callback">
+              <input type="text" value="1" name="customerId">
+              <input type="submit" value="submit">
+            </form>
+
   /android_sdk:
     post:
       tags:
@@ -234,7 +281,7 @@ paths:
               customerId:
                 type: string
                 description: The id entered by the user
-              desc:
+              description:
                 type: string
                 description: The description given by the user
               status:
