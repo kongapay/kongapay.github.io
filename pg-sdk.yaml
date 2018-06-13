@@ -86,7 +86,7 @@ info:
             <input type="submit" value="submit">
           </form>
 
-    # Anroid SDK
+    # Android SDK
 
     Before adding the kongapay android SDK include the maven repository below in the project level gradle build
     ```
