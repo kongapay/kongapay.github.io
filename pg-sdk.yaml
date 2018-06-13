@@ -28,12 +28,186 @@ info:
     # Note
     Test and Live environment is based on the key supplied. Key with *test_* signifies test environment and *live_* signifies live environment
 
+    # Web SDK
+
+    ## JavaScript Implementation
+
+    This section is for developers that pass `callback` as a function and also set `enableFrame` property as true
+
+          <html>
+            <script src="https://kongapay-pg.kongapay.com/js/v1/production/pg.js"></script>
+            <body>
+              <button class="btn btn-success btn-space" type="button" onclick="payWithKPG()"> Pay KPG </button>
+              <script>
+                function payWithKPG() {
+                  KPG.setup({
+                    "hash": "c0d20d59c2d97f86113802cddbede266c6c4fc5ff68ce6ea6e2de1c6e7c8c61155698e47b37920ed95dc68a65f97c287992ec21573f0a7742a9d34ca8e4b6db9",
+                    "amount": 12780,
+                    "description": "long thing",
+                    "email": "test@konga.com",
+                    "merchantId": "mer_001_TESTM",
+                    "reference": "TEST1XCDF",
+                    "firstname" : "Chioma",
+                    "lastname" : "Adeleke",
+                    "phone" : "08000000000",
+                    "metadata": [{
+                      "name": "address",
+                      "value": "1 Redemption Crescent, Gbagada, Lagos."
+                    }],
+                    "enableFrame": true,
+                    "callback" : "returnResult",
+                    "selectedChannelIdentifier" : "chn_002_deb1t",
+                    "customerId" : "1"
+                  });
+                }
+                function returnResult(err, data){
+                  console.log(err)
+                }
+              </script>
+            </body>
+          </html>
+
+    ## Form Implementation
+
+      Form Production url: `https://www.kongapay.com/paymentgateway`
+
+          <form method="post" action="https://www.kongapay.com/paymentgateway">
+            <input type="text" value="c0d20d59c2d97f86113802cddbede266c6c4fc5ff68ce6ea6e2de1c6e7c8c61155698e47b37920ed95dc68a65f97c287992ec21573f0a7742a9d34ca8e4b6db9" name="hash"/>
+            <input type="number" value="12780" name="amount"/>
+            <input type="text" value="tesing" name="description">
+            <input type="email" value="lukmon.alebiosu@konga.com" name="email">
+            <input type="text" value="mer_001_TESTM" name="merchant_id">
+            <input type="text" value="kongapay_001" name="reference">
+            <input type="text" value="Chioma" name="firstname">
+            <input type="text" value="Adeleke" name="lastname">
+            <input type="text" value="08000000000" name="phone">
+            <input type="text" value="https://kongapay.com" name="callback">
+            <input type="text" value="1" name="customerId">
+            <input type="submit" value="submit">
+          </form>
+
+    # Anroid SDK
+
+    Before adding the kongapay android SDK include the maven repository below in the project level gradle build
+    ```
+    maven {
+        url "https://dl.bintray.com/kongapay/maven"
+    }
+    ```
+
+    To include the Konga pay android SDK dependency
+    ```
+    implementation 'com.kongapay:paymentgatewayv2:2.0.1'
+    ```
+
+    To pass these parameters to the SDK Create an object of the `Params` class after importing it from the sdk, like so
+    ```
+    ...
+    import com.kongapay.paymentgatewayv2.Params;
+    ...
+    ```
+
+    Use the create method to store the required parameters, like so
+    ```
+    Params params = Params.create(
+        ...
+    );
+    ```
+
+    Call the `initiatePayment` method of the PaymentGatewaySdk after importing it, like so
+    ```
+    ...
+    import com.kongapay.paymentgatewayv2.PaymentGatewaySdk;
+    ...
+    ```
+
+    A Request code will be required to be passed alongside the params that will be passed into the initiatePayment method, and the activity calling the method. The request code can be any integer value
+    ```
+    ...
+    private static int REQUEST_CODE = 151;
+    ...
+    ```
+
+    Assuming the call is coming from the main activity the initiatePayment call should look like so
+    ```
+    PaymentGatewaySdk.inititatePayment(REQUEST_CODE, MainActivity.this, params);
+    ```
+
+    To get the result back from the SDK the `onActivityResult` method should be overridden, and the Payment result class imported from the SDK, like so
+    ```
+    ...
+    import import com.kongapay.paymentgatewayv2.PaymentResult;
+    ...
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        PaymentResult result = PaymentGatewaySdk.getResult(data);
+        ...
+    }
+    ```
+
+    A sample implementation of the SDK is shown below...
+    ```
+    ...
+    import com.kongapay.paymentgatewayv2.Params;
+    import com.kongapay.paymentgatewayv2.PaymentGatewaySdk;
+    import com.kongapay.paymentgatewayv2.PaymentResult;
+    ...
+
+    public class MainActivity extends AppCompatActivity {
+      private static int REQUEST_CODE = 153;
+
+      @Override
+      protected void onCreate(Bundle savedInstanceState) {
+        ...
+        Params params = Params.create(
+          merchantId,
+          merchantKey,
+          generateTransactionRef(),
+          description,
+          amountInKobo,
+          customerEmail,
+          customerPhone
+        );
+
+        params.setCustomerId("20");
+        PaymentGatewaySdk.initiatePayment(REQUEST_CODE, MainActivity.this, params);
+        ...
+      }
+      @Override
+      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE) {
+          Payment result = PaymentGatewaySdk.getResult(data);
+
+          boolean isSuccessful = result.isSuccessful();
+          String status = result.getStatus();
+          String ref = result.getReference();
+
+          Toast.makeText(this, status + (isSuccessful ? ": " + ref : "")
+
+          return;
+        }
+      }
+      private String generateTransactionRef() {
+        return "REF" + System.currentTimeMillis();
+      }
+      ...
+    }
+
+    ```
+
+    # iOS SDK
+
+    ### Coming Soon
+
+
 host: kongapay.com
 basePath: /
 schemes:
   - https
 x-servers:
-  - url: //kongapay.com/
+  - url: https://ignite.kongapay.com/v1/
     description: Live Server
 produces:
   - application/json
@@ -49,20 +223,17 @@ securityDefinitions:
     in: header
 security:
   - ApiKey: []
-
 paths:
-  /wed_sdk:
+  /paymentgateway:
     post:
       tags:
-        - Web SDK
-      summary: WEB SDK Documentation
+        - Parameters
+      summary: Parameters
       description: 'Initiate payment by making a redirect POST request'
-      produces:
-        - application/x-www-form-urlencoded
       parameters:
         - in: body
           name: body
-          description: Configuration options for KPG web SDK
+          description: Configuration parameters for Payment Gateway SDK
           required: true
           schema:
             type: object
@@ -72,29 +243,32 @@ paths:
                 description: Transaction Amount in kobo
               description:
                 type: string
-                description: short description
+                description: Short description of the transaction
               hash:
                 type: string
-                description: generated like so - sha512(amount|public_key|reference)
+                description: Required for web implementation generated with so - sha512(amount|public_key|reference)
+              merchantKey:
+                type: string
+                description: This is your public_key and is required only for mobile (iOS and Android) implementation
               email:
                 type: string
                 format: email
-                description: customer email
+                description: Customer email address
               merchantId:
                 type: string
                 description: This is will be provided by KongaPay on registration
-              merchant_reference:
+              reference:
                 type: string
                 description: Transaction reference, must be unique for every transaction request
               callback:
                 type: string
-                description: a url to redirect customer after processing payment
+                description: Required for web implementation, this is a url to redirect customer to or function to call after processing payment
               metadata:
                 type: object
-                description: This should contain an array of object about a transaction.
+                description: This should contain an array of object about the transaction.
               enableFrame:
                 type: boolean
-                description: setting to true will load the SDK in an iframe. false by default
+                description: Setting to true will load the SDK in an iframe. false by default
                 default: false
               phone:
                 type: string
@@ -107,7 +281,7 @@ paths:
                 description: Customer's Last Name
               customerId:
                 type: string
-                description: customer's email/phone/ID. Used to save customer's payment details where permitted
+                description: Customer's email/phone/ID. Used to save customer's payment details where permitted
             required:
               - amount
               - description
@@ -115,6 +289,7 @@ paths:
               - merchantId
               - merchant_reference
               - callback
+              - merchantKey
       responses:
         '200':
           description: Payment Successful
@@ -175,78 +350,7 @@ paths:
               merchant_refernce:
                 type: string
 
-      x-code-samples:
-        - lang: JS Implementation
-          source: |
-            <html>
-            <script src="https://kongapay-pg.kongapay.com/js/v1/production/pg.js"></script>
-            <body>
-              <button class="btn btn-success btn-space" type="button" onclick="payWithKPG()"> Pay KPG </button>
-              <script>
-                function payWithKPG() {
-                  KPG.setup({
-                    "hash": "c0d20d59c2d97f86113802cddbede266c6c4fc5ff68ce6ea6e2de1c6e7c8c61155698e47b37920ed95dc68a65f97c287992ec21573f0a7742a9d34ca8e4b6db9",
-                    "amount": 12780,
-                    "description": "long thing",
-                    "email": "test@konga.com",
-                    "merchantId": "mer_001_TESTM",
-                    "reference": "TEST1XCDF",
-                    "firstname" : "Chioma",
-                    "lastname" : "Adeleke",
-                    "phone" : "08000000000",
-                    "metadata": {
-                      "name": "address",
-                      "value": "1 Redemption Crescent, Gbagada, Lagos."
-                    },
-                    "enableFrame": true,
-                    "callback" : "returnResult",
-                    "selectedChannelIdentifier" : "chn_002_deb1t",
-                    "customerId" : "1"
-                  });
-                }
-                function returnResult(err, data){
-                  console.log(err)
-                }
-              </script>
-            </body>
-            </html>
-
-        - lang: Form Implementation
-          source: |
-            <form method="post" action="https://www.kongapay.com/paymentgateway">
-              <input type="text" value="c0d20d59c2d97f86113802cddbede266c6c4fc5ff68ce6ea6e2de1c6e7c8c61155698e47b37920ed95dc68a65f97c287992ec21573f0a7742a9d34ca8e4b6db9" name="hash"/>
-              <input type="number" value="12780" name="amount"/>
-              <input type="text" value="tesing" name="description">
-              <input type="email" value="lukmon.alebiosu@konga.com" name="email">
-              <input type="text" value="mer_001_TESTM" name="merchant_id">
-              <input type="text" value="kongapay_001" name="reference">
-              <input type="text" value="Chioma" name="firstname">
-              <input type="text" value="Adeleke" name="lastname">
-              <input type="text" value="08000000000" name="phone">
-              <input type="text" value="https://kongapay.com" name="callback">
-              <input type="text" value="1" name="customerId">
-              <input type="submit" value="submit">
-            </form>
-
-  /android_sdk:
-    post:
-      tags:
-        - Android SDK
-      summary: KPG Android SDK Documentation
-      description: 'Hello World'
-      produces:
-        - application/json
-
-  /ios_sdk:
-    post:
-      tags:
-        - iOS SDK
-      summary: KPG iOS SDK Documentation
-      description: 'Hello World'
-      produces:
-        - application/json
-
-  /requery:
+  '/payment/requery/{merchant_reference}':
     get:
       tags:
         - Requery
@@ -274,7 +378,7 @@ paths:
               createdAt:
                 type: string
                 description: The date, and time the transaction was carried out
-              merchantReference:
+              reference:
                 type: string
                 description: The reference generated for the merchant. Used for identification of the merchant. Not to be confused with
                              merchantId which is a numeric value
@@ -316,7 +420,7 @@ paths:
         '101':
           description: Server side errors
 
-  /refund:
+  /payment/refund:
     post:
       tags:
         - Refund
@@ -348,8 +452,8 @@ paths:
                 type: string
                 enum:
                   - success
-        '100':
-          description: Transaction is successful.
+        '400':
+          description: Transaction Failed.
           schema:
             type: object
             properties:
@@ -357,3 +461,89 @@ paths:
                 type: string
                 enum:
                   - failed
+
+  /merchant/banks:
+    get:
+      tags:
+        - Get Banks
+      summary: Get all Banks
+      description: 'Endpoint to get all banks'
+      parameters:
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - Success
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                      description: 2
+                    name:
+                      type: string
+                      description: Access Bane
+                    status:
+                      type: string
+                      description: active
+                    logo_url:
+                      type: string
+                      description: https://s3.amazonaws.com/www_konga_com/bank_logo/access.png
+                    is_mandate:
+                      type: string
+                      description: 0
+                    nip_bank_code:
+                      type: string
+                      description: 044
+                    is_bvn_mandate:
+                      type: string
+                      description: 0
+
+  '/merchant/account/{account_number}/bank/{bank_code}':
+    get:
+      tags:
+        - Get Account Name
+      summary: Get Account Name
+      description: 'Endpoint to get Account Name'
+      parameters:
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - Success
+              data:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    enum:
+                      - John Doe
+        '404':
+          description: Name not found
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - error
+              code:
+                type: string
+                enum:
+                  - E0032
+              message:
+                type: string
+                enum:
+                  - Name not found
