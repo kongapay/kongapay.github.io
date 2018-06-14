@@ -146,7 +146,7 @@ info:
     }
     ```
 
-    A sample implementation of the SDK is shown below...
+    ### A sample implementation of the SDK is shown below...
     ```
     ...
     import com.kongapay.paymentgatewayv2.Params;
@@ -198,9 +198,151 @@ info:
     ```
 
     # iOS SDK
+    To add the KongaPay Payment Gateway to your iOS project do the following
 
-    ### Coming Soon
+    Navigate to your project/product directory in terminal and run
+    ```
+    'pod init'
+    'open podfile'
+    ```
+    When the pod file opens, add this under the 'use_frameworks' section of the file
+    ```
+    pod 'PgIosSdk', '2.0.0'
+    Run 'pod install'
+    ```
+    Close out of any running xcode sessions and open your project/product from the '*.xcworkspace' file created. Try importing the module into your project, like so
+    ```
+    'import PgIosSdk'
+    ```
+    The delegate 'PaymentCompleteDelegate' needs to be implemented in your iOS app. For example:
+    ```
+    class viewController: PaymentCompleteDelegate {
+        ...
+    }
+    ```
+    You'll have to specify the class that acts as the delegate, like so:
+    ```
+    ...
+    PaymentGateway.kpgManager.delegate = self
+    ...
+    ```
+    And it's protocols adhered to
+    ```
+    class viewController: PaymentCompleteDelegate, ... {
+      ...
 
+      // Protocols to be adhered to
+      func paymentInitiatedSuccess() {
+        ...
+      }
+
+      func paymentCompleteSuccess(responseData: NSDictionary) {
+        ...
+      }
+
+      func paymentFailedError(errorData: NSDictionary) {
+        ...
+      }
+
+      func paymentCancelled(cancelationData: NSDictionary) {
+        ...
+      }
+    }
+    ```
+
+    The parameters required to initialise the Payment Gateway include:
+    ```
+    {
+      amountInKobo,
+      description,
+      merchantId,
+      reference, // this can be any concatenation of strings and integers
+      merchantKey,
+      isLive
+    }
+    ```
+
+    These parameters need to be passed into the initialise method of the paymentgateway, like so:
+    ```
+    ...
+    PaymentGateway.kpgManager.initialise(
+      amountInKobo: "10000",
+      description: desc, merchantId: mId,
+      reference: generateTransactionReference(),
+      merchantKey: mKey,
+      isLive: true
+    )
+    ...
+    ```
+
+    ### A sample implementation is shown below:
+
+
+    ```
+    import PgIosSdk
+
+    class ViewController: UIViewController, PaymentCompleteDelegate {
+
+      private var desc = "Testing Payment Gateway IOS"
+      private var mId = "mer_001_TESTM"
+      private var mKey = "test_pu_23ewnewewn232332"
+
+      override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        PaymentGateway.kpgManager.delegate = self
+      }
+
+      override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+      }
+
+      @IBAction func initiatePayment(_ sender: UIButton) {
+        debugPrint("Initiating Payment")
+        debugPrint("Transaction Reference: " + generateTransactionReference())
+
+        PaymentGateway.kpgManager.initialise(
+          amountInKobo: "10000",
+          description: desc, merchantId: mId,
+          reference: generateTransactionReference(),
+          merchantKey: mKey,
+          isLive: false
+        )
+      }
+
+      func paymentInitiatedSuccess() {
+        debugPrint("MERCHANT APP: Payment successfully initiated")
+      }
+
+      func paymentCompleteSuccess(responseData: NSDictionary) {
+        debugPrint("MERCHANT APP: Payment Completed")
+        debugPrint(responseData)
+      }
+
+      func paymentFailedError(errorData: NSDictionary) {
+        debugPrint("MERCHANT APP: Payment failed with fatal error")
+        debugPrint(errorData)
+      }
+
+      func paymentCancelled(cancelationData: NSDictionary) {
+        debugPrint("MERCHANT APP: Payment canceled by user")
+        debugPrint(cancelationData)
+      }
+
+      private func generateTransactionReference() -> String {
+        let currentTimeMillis: Double = round(NSDate().timeIntervalSince1970)
+
+        return "REF" + currentTimeMillis.removeTrailingZero
+      }
+    }
+
+    extension Double {
+      var removeTrailingZero: String {
+        return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
+      }
+    }
+    ```
 
 host: kongapay.com
 basePath: /
@@ -209,9 +351,9 @@ schemes:
 x-servers:
   - url: https://ignite.kongapay.com/v1/
     description: Live Server
-produces:
-  - application/json
 consumes:
+  - application/json
+produces:
   - application/json
 securityDefinitions:
   ApiKey:
@@ -486,25 +628,18 @@ paths:
                   properties:
                     code:
                       type: string
-                      description: 2
                     name:
                       type: string
-                      description: Access Bane
                     status:
                       type: string
-                      description: active
                     logo_url:
                       type: string
-                      description: https://s3.amazonaws.com/www_konga_com/bank_logo/access.png
                     is_mandate:
                       type: string
-                      description: 0
                     nip_bank_code:
                       type: string
-                      description: 044
                     is_bvn_mandate:
                       type: string
-                      description: 0
 
   '/merchant/account/{account_number}/bank/{bank_code}':
     get:
