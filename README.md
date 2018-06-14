@@ -6,4 +6,6 @@ In order to view the documentation, please visit, <a href="http://kongapay.githu
 
 If you have updates to this documentation, please, create a `Pull Request`. It will be reviewed and merged if necessary.
 
-DO you have a feature you want us to add to the SDK? Create a feature request by sending an email to [support@kongapay.com](mailto:support@kongapay.com)
+Do you have a feature you want us to add to the SDK? Create a feature request by sending an email to [support@kongapay.com](mailto:support@kongapay.com)
+
+#### <a href="https://www.kongapay.com/#kongapay-demo" target="_blank">Click here</a> to demo KongaPay Payment Gateway SDK by <a href="https://www.kongapay.com/#kongapay-demo">donating to Charity</a>

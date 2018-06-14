@@ -18,6 +18,8 @@ info:
 
     In order to use KongaPay Payment Gateway SDK, <a href="https://www.kongapay.com/merchant/register" target="_blank">sign up as a Merchant on KongaPay</a>. After signup, a Test API Key will be generated for you. Live API Key will be generated for you on meeting all requirements.
 
+    ### <a href="https://www.kongapay.com/#kongapay-demo" target="_blank">Click here</a> to demo KongaPay Payment Gateway SDK by <a href="https://www.kongapay.com/#kongapay-demo">donating to Charity</a>
+
     # Authentication
     You authenticate to the
     KongaPay by providing your secret key (test or live public) and source in the request header.
