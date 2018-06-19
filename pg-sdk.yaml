@@ -20,15 +20,17 @@ info:
 
     ### <a href="https://www.kongapay.com/#kongapay-demo" target="_blank">Click here</a> to demo KongaPay Payment Gateway SDK by <a href="https://www.kongapay.com/#kongapay-demo" target="_blank">donating to Charity</a>
 
-    # Authentication
-    You authenticate to the
-    KongaPay by providing your secret key (test or live public) and source in the request header.
-
-    Never share your secret keys. Keep them guarded and secure.
-    The client-side authentication scheme uses one HTTP header named Api-Key.
 
     # Note
-    Test and Live environment is based on the key supplied. Key with *test_* signifies test environment and *live_* signifies live environment
+    Test and Live environment is based on the key supplied. Key with `test_` signifies test environment and `live_` signifies live environment
+
+    ## Generating Hash
+    Hash is required for web implementation and should be generated with `sha512(amount|public_key|reference)`
+
+    ## Authentication
+    You authenticate to the KongaPay by providing your secret key (test or live public) and source in the request header.
+
+    Never share your secret keys. Keep them guarded and secure. The client-side authentication scheme uses one HTTP header named Api-Key.
 
     # Web SDK
 
