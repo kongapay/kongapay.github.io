@@ -410,8 +410,15 @@ paths:
                 type: string
                 description: Required for web implementation, this is a url to redirect customer to or function to call after processing payment
               metadata:
-                type: object
-                description: This should contain an array of object about the transaction.
+                type: array
+                items:
+                  type: object
+                  description: This should contain an array of object about the transaction.
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
               enableFrame:
                 type: boolean
                 description: Setting to true will load the SDK in an iframe. false by default
@@ -500,85 +507,94 @@ paths:
     get:
       tags:
         - Requery
-      summary: KPG Transaction Requery Documentation
+      summary: Requery Endpoint Documentation
       description: 'Once a transaction is completed, merchants can confirm the status of a transaction by calling'
       produces:
         - application/json
       parameters:
-        - in: body
-          name: body
-          description: Configuration options for KPG web SDK
-          required: true
-          schema:
-            type: object
-            properties:
-              amount:
-                type: integer
-                description: Indicates the amount the customer inputed
-              originalAmount:
-                type: integer
-                description: Indicates the amount before the user made a new transaction
-              identifier:
-                type: string
-                description: A 'receipt' id appended to the transaction
-              createdAt:
-                type: string
-                description: The date, and time the transaction was carried out
-              reference:
-                type: string
-                description: The reference generated for the merchant. Used for identification of the merchant. Not to be confused with
-                             merchantId which is a numeric value
-              customerId:
-                type: string
-                description: The id entered by the user
-              description:
-                type: string
-                description: The description given by the user
-              status:
-                type: string
-                description: The status of the transaction
-              successful:
-                type: boolean
-                description: Returns true to indicate that payment was a success
       responses:
         '200':
-          description: Payment Successful
+          description: Success
           schema:
             type: object
             properties:
-              code:
-                type: string
-                enum:
-                  - 200
-                description: test
-              message:
-                type: string
-                enum:
-                  - Payment Successful
               status:
                 type: string
                 enum:
                   - success
-              merchant_refernce:
+              data:
+                type: object
+                properties:
+                  charge:
+                    type: object
+                    properties:
+                      amount:
+                        type: integer
+                        description: Indicates the amount the customer inputed
+                      originalAmount:
+                        type: integer
+                        description: Indicates the amount before the user made a new transaction
+                      identifier:
+                        type: string
+                        description: A 'receipt' id appended to the transaction
+                      createdAt:
+                        type: string
+                        description: The date, and time the transaction was carried out
+                      reference:
+                        type: string
+                        description: The reference generated for the merchant. Used for identification of the merchant. Not to be confused with
+                                     merchantId which is a numeric value
+                      customerId:
+                        type: string
+                        description: The id entered by the user
+                      description:
+                        type: string
+                        description: The description given by the user
+                      status:
+                        type: string
+                        description: The status of the transaction
+                      successful:
+                        type: boolean
+                        description: Returns true to indicate that payment was a success
+                  metadata:
+                    type: array
+                    description: This should contain an array of object about the transaction.
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: string
+        '404':
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              status:
                 type: string
-        '100':
-          description: Missing Parameters
-        '101':
-          description: Server side errors
+                enum:
+                  - error
+              message:
+                type: string
+                enum:
+                  - transaction not found
+              code:
+                type: string
+                enum:
+                  - 104
 
   /payment/refund:
     post:
       tags:
         - Refund
-      summary: Refund Endpoint Documentation for KPG
-      description: 'Hello World'
+      summary: Refund Endpoint Documentation
+      description: 'Refund Endpoint Documentation for KPG'
       produces:
         - application/json
       parameters:
         - in: body
           name: body
-          description: Configuration options for KPG web SDK
-          required: true
           schema:
             type: object
             properties:
