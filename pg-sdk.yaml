@@ -723,29 +723,39 @@ paths:
               email:
                 type: string
                 format: email
-                description: Email address of Invoice Recipient
+                description: Email address of Invoice recipient
               phone_number:
                 type: integer
-                description: Email address of Invoice Recipient
+                description: Phone number of  Invoice recipient
               description:
                 type: string
-                description: Email address of Invoice Recipient
+                description: Description of invoice
       responses:
         '200':
-          description: Transaction is successful.
+          description: Success
           schema:
             type: object
             properties:
               status:
                 type: string
                 enum:
-                  - success
+                  - Success
+              data:
+                type: object
         '400':
-          description: Transaction Failed.
+          description: Name not found
           schema:
             type: object
             properties:
               status:
                 type: string
                 enum:
-                  - failed
+                  - error
+              code:
+                type: string
+                enum:
+                  - 400
+              message:
+                type: string
+                enum:
+                  - ""
