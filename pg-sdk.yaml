@@ -702,3 +702,50 @@ paths:
                 type: string
                 enum:
                   - Name not found
+
+  /payment/invoice:
+    post:
+      tags:
+        - Create Invoice
+      summary: Create  Invoice
+      description: 'Create Invoice Documentation for KPG'
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              amount:
+                type: integer
+                description: Indicates the amount to be paid
+              email:
+                type: string
+                format: email
+                description: Email address of Invoice Recipient
+              phone_number:
+                type: integer
+                description: Email address of Invoice Recipient
+              description:
+                type: string
+                description: Email address of Invoice Recipient
+      responses:
+        '200':
+          description: Transaction is successful.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - success
+        '400':
+          description: Transaction Failed.
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                  - failed
