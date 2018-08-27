@@ -707,8 +707,8 @@ paths:
     post:
       tags:
         - Create Invoice
-      summary: Create  Invoice
-      description: 'Create Invoice Documentation for KPG'
+      summary: Create Simple Invoice
+      description: 'Create Simple Invoice Documentation for Merchant'
       produces:
         - application/json
       parameters:
@@ -759,3 +759,72 @@ paths:
                 type: string
                 enum:
                   - ""
+
+  /payment/invoice:
+      post:
+        tags:
+          - Create Invoice
+        summary: Create Professional Invoice
+        description: 'Create Professional Invoice Documentation for Merchant'
+        produces:
+          - application/json
+        parameters:
+          - in: body
+            name: body
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: integer
+                  description: Indicates the amount to be paid
+                email:
+                  type: string
+                  format: email
+                  description: Email address of Invoice recipient
+                phone_number:
+                  type: integer
+                  description: Phone number of  Invoice recipient
+                description:
+                  type: string
+                  description: Description of invoice
+                items:
+                  type: array
+                  description: Array of item objects including name, quantity and amount
+                tax:
+                  type: array
+                  description: Array of tax objects including name, amount
+                discount:
+                  type: object
+                  description: Object of discount including type and value
+                due_date:
+                  type: string
+                  description: Due date of the invoice payment
+        responses:
+          '200':
+            description: Success
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - Success
+                data:
+                  type: object
+          '400':
+            description: Name not found
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - error
+                code:
+                  type: string
+                  enum:
+                    - 400
+                message:
+                  type: string
+                  enum:
+                    - ""
