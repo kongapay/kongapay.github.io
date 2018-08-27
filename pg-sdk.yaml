@@ -704,67 +704,10 @@ paths:
                   - Name not found
 
   /payment/invoice:
-    post:
-      tags:
-        - Create Invoice
-      summary: Create Simple Invoice
-      description: 'Create Simple Invoice Documentation for Merchant'
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: body
-          schema:
-            type: object
-            properties:
-              amount:
-                type: integer
-                description: Indicates the amount to be paid
-              email:
-                type: string
-                format: email
-                description: Email address of Invoice recipient
-              phone_number:
-                type: integer
-                description: Phone number of  Invoice recipient
-              description:
-                type: string
-                description: Description of invoice
-      responses:
-        '200':
-          description: Success
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                enum:
-                  - Success
-              data:
-                type: object
-        '400':
-          description: Name not found
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                enum:
-                  - error
-              code:
-                type: string
-                enum:
-                  - 400
-              message:
-                type: string
-                enum:
-                  - ""
-
-  /payment/invoice:
       post:
         tags:
           - Create Invoice
-        summary: Create Professional Invoice
+        summary: Create Invoice
         description: 'Create Professional Invoice Documentation for Merchant'
         produces:
           - application/json
