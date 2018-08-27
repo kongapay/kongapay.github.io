@@ -790,12 +790,33 @@ paths:
                 items:
                   type: array
                   description: Array of item objects including name, quantity and amount
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      quantity:
+                        type: integer
+                      amount:
+                        type: double
                 tax:
                   type: array
                   description: Array of tax objects including name, amount
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      amount:
+                        type: double
                 discount:
                   type: object
                   description: Object of discount including type and value
+                  properties:
+                    type:
+                      type: string
+                      format: percentage or flat_amount
+                      description: Indicates the type of discount to apply
                 due_date:
                   type: string
                   description: Due date of the invoice payment
