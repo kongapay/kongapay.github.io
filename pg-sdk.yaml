@@ -134,13 +134,13 @@ info:
 
     Assuming the call is coming from the main activity the initiatePayment call should look like so
     ```
-    PaymentGatewaySdk.inititatePayment(REQUEST_CODE, MainActivity.this, params);
+    PaymentGatewaySdk.initiatePayment(REQUEST_CODE, MainActivity.this, params);
     ```
 
     To get the result back from the SDK the `onActivityResult` method should be overridden, and the Payment result class imported from the SDK, like so
     ```
     ...
-    import import com.kongapay.paymentgatewayv2.PaymentResult;
+    import com.kongapay.paymentgatewayv2.PaymentResult;
     ...
 
     @Override
