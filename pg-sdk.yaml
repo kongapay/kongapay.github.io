@@ -435,6 +435,24 @@ paths:
               customerId:
                 type: string
                 description: Customer's email/phone/ID. Used to save customer's payment details where permitted
+              recurring_data:
+                type: array
+                items:
+                  type: object
+                  description: This should contain an array of object for recurring payments.
+                  properties:
+                    debit_amount:
+                      type: string
+                      description: This is the recurring amount to be debited.
+                    full_amount:
+                      type: string
+                      description: Total amount to be deducted.
+                    frequency:
+                      type: string
+                      description: How often should deduction be made “daily || weekly || monthly || yearly”.
+                    cycles:
+                      type: string
+                      description: Number of times to be debited full_amount/debit_amount.
             required:
               - amount
               - description
